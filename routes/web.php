@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBusinessController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -25,4 +26,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 /* ------- Admin Routes -----------*/
 Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () {
     Route::get('/dashboard',    [AdminDashboardController::class,'index']);
+
+    // ------ business routes
+    Route::get('business/index',         [AdminBusinessController::class,'index']);
+    Route::get('business/create',        [AdminBusinessController::class,'create']);
+    Route::post('business/store',        [AdminBusinessController::class,'store']);
+    Route::get('business/edit/{id}',     [AdminBusinessController::class,'edit']);
+    Route::post('business/update',       [AdminBusinessController::class,'update']);
+    Route::get('business/delete/{id}',   [AdminBusinessController::class,'delete']);
 });

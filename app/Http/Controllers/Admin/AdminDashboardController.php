@@ -10,7 +10,7 @@ class AdminDashboardController extends Controller
     public function index(){
         $data=[
             'title' => 'Admin Dashboard',
-            'breadcrumbs' => ['admin/dashboard'=>'Dashboard'],
+            'breadcrumbs' => array("admin/dashboard" => "Dashboard"),
             'active' => 'Dashboard',
         ];
         return view('admin.dashboard',$data);

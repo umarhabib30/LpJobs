@@ -6,16 +6,31 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{@$title}}</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo.png') }}">
+
+    <title>{{$title }}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('assets/vendor/fonts/circular-std/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/libs/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome/css/fontawesome-all.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
 
-      <!-- ===========================Content yield============================= -->
-      @yield('style')
-      <!-- ===========================Content yield============================= -->
+    <!-- toastr cdns -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+     <!-- sweet alert --->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- ===========================Content yield============================= -->
+    @yield('style')
+    <!-- ===========================Content yield============================= -->
 </head>
 
 <body>
@@ -28,7 +43,7 @@
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="../index.html">Concept</a>
+                <a class="navbar-brand" href="#">LP JOBS</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -44,11 +59,15 @@
                             <div class="dropdown-menu dropdown-menu-right nav-user-dropdown"
                                 aria-labelledby="navbarDropdownMenuLink2">
                                 <div class="nav-user-info">
-                                    <h5 class="mb-0 text-white nav-user-name"> John Abraham</h5>
+                                    <h5 class="mb-0 text-white nav-user-name">{{@Auth::user()->name}}</h5>
                                 </div>
-                                <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
-                                <a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>
-                                <a class="dropdown-item" href="#"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                                {{-- <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a> --}}
+                                <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fas fa-power-off mr-2"></i>Logout</a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </div>
                         </li>
                     </ul>
@@ -76,95 +95,20 @@
                                 Menu
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link active" href="#" data-toggle="collapse"
-                                    aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i
-                                        class="fa fa-fw fa-user-circle"></i>Dashboard <span
+                                <a class="nav-link active" href="{{url('admin/dashboard')}}"  data-target="#submenu-1" aria-controls="submenu-1"><i  class="fa fa-fw fa-user-circle"></i>Dashboard <span
                                         class="badge badge-success">6</span></a>
-                                <div id="submenu-1" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="index.html" data-toggle="collapse"
-                                                aria-expanded="false" data-target="#submenu-1-2"
-                                                aria-controls="submenu-1-2">E-Commerce</a>
-                                            <div id="submenu-1-2" class="collapse submenu" style="">
-                                                <ul class="nav flex-column">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="index.html">E Commerce Dashboard</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="../ecommerce-product.html">Product
-                                                            List</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link"
-                                                            href="../ecommerce-product-single.html">Product Single</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link"
-                                                            href="../ecommerce-product-checkout.html">Product
-                                                            Checkout</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../dashboard-finance.html">Finance</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../dashboard-sales.html">Sales</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#" data-toggle="collapse"
-                                                aria-expanded="false" data-target="#submenu-1-1"
-                                                aria-controls="submenu-1-1">Infulencer</a>
-                                            <div id="submenu-1-1" class="collapse submenu" style="">
-                                                <ul class="nav flex-column">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link"
-                                                            href="../dashboard-influencer.html">Influencer</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link"
-                                                            href="../influencer-finder.html">Influencer Finder</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link"
-                                                            href="../influencer-profile.html">Influencer Profile</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
                                     data-target="#submenu-2" aria-controls="submenu-2"><i
-                                        class="fa fa-fw fa-rocket"></i>UI Elements</a>
+                                        class="fa fa-fw fa-rocket"></i>Business</a>
                                 <div id="submenu-2" class="collapse submenu" style="">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="cards.html">Cards <span
-                                                    class="badge badge-secondary">New</span></a>
+                                            <a class="nav-link" href="{{url('admin/business/create')}}">Create <span class="badge badge-secondary"></span></a>
+                                            <a class="nav-link" href="{{url('admin/business/index')}}">View <span class="badge badge-secondary"></span></a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="general.html">General</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="carousel.html">Carousel</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="listgroup.html">List Group</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="typography.html">Typography</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="accordions.html">Accordions</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="tabs.html">Tabs</a>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </li>
@@ -396,15 +340,15 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">Carousel</h2>
+                            <h2 class="pageheader-title">{{$active}}</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="#"
-                                                class="breadcrumb-link">Dashboard</a></li>
-                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">UI
-                                                Elements</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Carousel</li>
+                                        @foreach ($breadcrumbs as $key =>$breadcrumb)
+
+                                        <li class="breadcrumb-item"><a href="{{url($key)}}"  class="breadcrumb-link">{{$breadcrumb}}</a></li>
+                                        @endforeach
+
                                     </ol>
                                 </nav>
                             </div>
@@ -427,6 +371,23 @@
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('assets/vendor/slimscroll/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('assets/libs/js/main-js.js') }}"></script>
+
+
+    <script src="{{ asset('assets/vendor/multi-select/js/jquery.multi-select.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('assets/vendor/datatables/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
 
     <!-- ===========================Script yield============================= -->
     @yield('script')
