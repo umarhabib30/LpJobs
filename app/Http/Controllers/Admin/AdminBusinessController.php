@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessNotes;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Note;
@@ -37,10 +38,8 @@ class AdminBusinessController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = $request->all();
-            $notes = Note::create(['note' => $request->notes]);
-            $data['notes_id'] = $notes->id;
-            Customer::create($data);
+            $customer= Customer::create($request->all());
+            BusinessNotes::create(['notes' => $request->notes,'customer_id'=>$customer->id]);
             return redirect()->back()->with('success', 'Business added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -65,11 +64,9 @@ class AdminBusinessController extends Controller
     public function update(Request $request)
     {
         try {
-            $data = $request->all();
-            $notes = Note::find($request->notes_id);
-            $notes->update(['note' => $request->notes]);
+
             $business = Customer::find($request->business_id);
-            $business->update($data);
+            $business->update($request->all());
             return redirect('admin/business/index')->with('success', 'Business updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

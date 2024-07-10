@@ -83,7 +83,7 @@
 
                         <div class="form-group">
                             <label for="exampleFormControlTextarea1">Notes</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes">{{ @$business->notes->note }}</textarea>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes">{{ @$business->notes }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Update Business</button>
                     </form>

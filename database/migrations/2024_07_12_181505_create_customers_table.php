@@ -28,8 +28,8 @@ return new class extends Migration
             $table->string('web')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();
-            $table->foreignId('notes_id')->constrained('notes')->onDelete('cascade');
             $table->string('contact_them')->nullable();
+            $table->longText('notes')->nullable();
             $table->timestamps();
         });
     }

@@ -23,8 +23,8 @@ class Customer extends Model
         'web',
         'facebook',
         'instagram',
-        'notes_id',
         'contact_them',
+        'notes',
     ];
 
     public function category(){

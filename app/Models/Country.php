@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Note extends Model
+class Country extends Model
 {
     use HasFactory;
+
     protected $fillable=[
-        'note','job_id',
+        'country',
     ];
 }
