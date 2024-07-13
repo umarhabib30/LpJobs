@@ -19,7 +19,7 @@
                                 <tr>
                                     <td><span class="text-dark">Customer : </span></td>
                                     <td>
-                                        <p>{{ $job->customer }}</p>
+                                        <p>{{ $job->business->business_name }}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -31,19 +31,14 @@
                                 <tr>
                                     <td><span class="text-dark">Size : </span></td>
                                     <td>
-                                        <p>{{ $job->size }}</p>
+                                        <p>{{ $job->size->size }}</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><span class="text-dark">Customer : </span></td>
-                                    <td>
-                                        <p>{{ $job->customer }}</p>
-                                    </td>
-                                </tr>
+
                                 <tr>
                                     <td><span class="text-dark">Item : </span></td>
                                     <td>
-                                        <p>{{ $job->item }}</p>
+                                        <p>{{ $job->item->name }}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -55,13 +50,13 @@
                                 <tr>
                                     <td><span class="text-dark">User : </span></td>
                                     <td>
-                                        <p>{{ $job->user }}</p>
+                                        <p>{{ $job->user->name }}</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><span class="text-dark">Status : </span></td>
                                     <td>
-                                        <p>{{ $job->status }}</p>
+                                        <p>{{ $job->status->status }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -69,25 +64,28 @@
                             <button class="btn btn-primary mt-4">Edit Job</button></a>
                         </div>
                         <div class="col-sm-6">
-                            <form method="post" action="{{ url('admin/job/add-notes') }}">
+                            <form method="post" action="{{ url('admin/job/add-notes') }}" id="add_notes_form">
                                 @csrf
                                 <input type="hidden" name="job_id" value="{{ $job->id }}" id="">
+                                <input type="hidden" name="user_id" id="" value="{{Auth::user()->id}}">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Notes</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="note"></textarea>
+                                    <textarea class="form-control" id="job_notes" rows="2" name="note"></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-2">+Add Note</button>
+                                <button  class="btn btn-primary mb-2 submit_button">+Add Note</button>
                             </form>
-                            <div class="table-responsive-sm">
+                            <div class="table-responsive-sm" style="overflow: hidden; overflow-y: scroll; height: 250px;">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
+                                            <th>Name</th>
                                             <th>Notes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($job->notes as $key => $note)
                                             <tr>
+                                                <td>{{$note->user->name}}</td>
                                                 <td>{{ $note->note }}</td>
                                             </tr>
                                         @endforeach
@@ -106,3 +104,18 @@
         </div>
     </div>
 @endsection
+@section('script')
+    <script>
+        $(document).ready(function(){
+            $('body').on('click','.submit_button',function(e){
+                e.preventDefault();
+                if($('#job_notes').val().trim() == ''){
+                    toastr.error('Please add some note');
+                }else{
+                    $('#add_notes_form').submit();
+                }
+            });
+        });
+    </script>
+@endsection
+

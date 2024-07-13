@@ -9,18 +9,33 @@ class Job extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'customer',
-        'size',
+        'customer_id',
+        'size_id',
         'quantity',
-        'item',
+        'item_id',
         'material',
         'price',
         'file',
-        'user',
-        'status',
+        'user_id',
+        'status_id',
     ];
 
     public function notes(){
         return $this->hasMany(Note::class,'job_id');
+    }
+    public function business(){
+        return $this->belongsTo(Customer::class,'customer_id');
+    }
+    public function size(){
+        return $this->belongsTo(Size::class,'size_id');
+    }
+    public function item(){
+        return $this->belongsTo(Item::class,'item_id');
+    }
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+    public function status(){
+        return $this->belongsTo(JobStatus::class,'status_id');
     }
 }

@@ -4,9 +4,9 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
             <div class="card">
-                {{-- <h5 class="card-header">Basic Form</h5> --}}
+                <h5 class="card-header">Edit Business</h5>
                 <div class="card-body">
-                    <form method="post" action="{{ url('admin/business/update') }}">
+                    <form method="post" action="{{ url('admin/business/update') }}" id="add_business_form">
                         @csrf
                         <input type="hidden" name="notes_id" id="" value="{{ @$business->notes_id }}">
                         <input type="hidden" name="business_id" id="" value="{{ @$business->id }}">
@@ -85,10 +85,55 @@
                             <label for="exampleFormControlTextarea1">Notes</label>
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes">{{ @$business->notes }}</textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Business</button>
+                        <button type="submit" class="btn btn-primary" id="submit_button">Update Business</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+@section('script')
+<script>
+    $(document).ready(function() {
+        $('body').on('click', '#submit_button', function(e) {
+            e.preventDefault();
+
+            var isValid = true;
+            var cat_id = $('.category_selected').val();
+
+            if (cat_id == -1) {
+                toastr.error('Please select business category');
+                isValid = false;
+            }else{
+                var fields = [
+                    { id: '#business_name', message: 'Please enter business name' },
+                    { id: '#address', message: 'Please enter door number' },
+                    { id: '#road', message: 'Please enter road' },
+                    { id: '#town', message: 'Please enter town' },
+                    { id: '#city', message: 'Please enter city' },
+                    { id: '#post_code', message: 'Please enter postal code' },
+                    { id: '#tel', message: 'Please enter telephone number' },
+                    { id: '#mobile', message: 'Please enter mobile number' },
+                    { id: '#email', message: 'Please enter email address' },
+                    { id: '#web', message: 'Please enter website' },
+                    { id: '#exampleFormControlTextarea1', message: 'Please enter notes' }
+                ];
+
+                for (var i = 0; i < fields.length; i++) {
+                    if ($(fields[i].id).val() === '') {
+                        toastr.error(fields[i].message);
+                        isValid = false;
+                        break;
+                    }
+                }
+            }
+
+
+            if (isValid) {
+                $('#add_business_form').off('submit').submit();
+            }
+        });
+    });
+</script>
+@endsection
+

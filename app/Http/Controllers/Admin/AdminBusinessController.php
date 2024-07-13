@@ -8,6 +8,9 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminBusinessController extends Controller
 {
@@ -29,7 +32,7 @@ class AdminBusinessController extends Controller
         $data = [
             'title' => 'Business list',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/business/create' => 'Add Business'),
-            'active' => 'Add Business',
+            'active' => 'Business',
             'categories' => $categories,
         ];
         return view('admin.business.create', $data);
@@ -37,9 +40,28 @@ class AdminBusinessController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'cat_id' => 'required',
+            'business_name' => 'required',
+            'address' => 'required',
+            'road' => 'required',
+            'town' => 'required',
+            'city' => 'required',
+            'post_code' => 'required',
+            'tel' => 'required',
+            'mobile' => 'required',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
+            'web' => 'required|url',
+            'notes' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
+        }
         try {
-            $customer= Customer::create($request->all());
-            BusinessNotes::create(['notes' => $request->notes,'customer_id'=>$customer->id]);
+            $customer = Customer::create($request->all());
+            BusinessNotes::create(['notes' => $request->notes, 'customer_id' => $customer->id]);
             return redirect()->back()->with('success', 'Business added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -53,8 +75,8 @@ class AdminBusinessController extends Controller
         $categories = Category::all();
         $data = [
             'title' => 'Business list',
-            'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/business/create' => 'Add Business'),
-            'active' => 'Add Business',
+            'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/business/index' => 'Business', 'admin/business/edit/' . $business->id => "Edit business"),
+            'active' => 'Business',
             'business' => $business,
             'categories' => $categories,
         ];
@@ -63,15 +85,30 @@ class AdminBusinessController extends Controller
 
     public function update(Request $request)
     {
-        try {
+        $business = Customer::find($request->business_id);
+        
+        $validator = Validator::make($request->all(), [
+            'cat_id' => 'required',
+            'business_name' => 'required',
+            'address' => 'required',
+            'road' => 'required',
+            'town' => 'required',
+            'city' => 'required',
+            'post_code' => 'required',
+            'tel' => 'required',
+            'mobile' => 'required',
+            'email' => ['required', 'string', 'email', 'max:255',Rule::unique('customers', 'email')->ignore($business->id)],
+            'web' => 'required|url',
+            'notes' => 'required',
+        ]);
 
-            $business = Customer::find($request->business_id);
-            $business->update($request->all());
-            return redirect('admin/business/index')->with('success', 'Business updated successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
         }
+
+        $business->update($request->all());
+        return redirect('admin/business/index')->with('success', 'Business updated successfully');
     }
 
     public function delete($id)

@@ -11,12 +11,15 @@ use App\Models\Note;
 use App\Models\Size;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AdminJobController extends Controller
 {
     public function index()
     {
-        $jobs = Job::all();
+        $jobs = Job::latest()->get();
         $data = [
             'title' => 'Jobs list',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/jobs/index' => 'Jobs'),
@@ -35,7 +38,7 @@ class AdminJobController extends Controller
             'businesses' => Customer::all(),
             'items' => Item::all(),
             'sizes' => Size::all(),
-            'users' => User::all(),
+            'users' => User::where('role', 2)->get(),
             'statusses' => JobStatus::all(),
         ];
         return view('admin.job.create', $data);
@@ -44,8 +47,9 @@ class AdminJobController extends Controller
     public function store(Request $request)
     {
         try {
+            $user = Auth::user();
             $job = Job::create($request->all());
-            Note::create(['note' => $request->notes, 'job_id' => $job->id]);
+            Note::create(['note' => $request->notes, 'job_id' => $job->id, 'user_id' => $user->id]);
             return redirect()->back()->with('success', 'Job added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -66,6 +70,14 @@ class AdminJobController extends Controller
 
     public function addNote(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'note' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
+        }
         Note::create($request->all());
         return redirect()->back()->with('success', 'Note added successfully');
     }
@@ -80,12 +92,22 @@ class AdminJobController extends Controller
             'businesses' => Customer::all(),
             'items' => Item::all(),
             'sizes' => Size::all(),
-            'users' => User::all(),
+            'users' => User::where('role', 2)->get(),
             'statusses' => JobStatus::all(),
         ];
         return view('admin.job.edit', $data);
     }
-    public function update(Request $request){
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'material' => 'required',
+            'price' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
+        }
         $job = Job::find($request->job_id);
         $job->update($request->all());
         return redirect()->back()->with('success', 'Job updated successfully');
