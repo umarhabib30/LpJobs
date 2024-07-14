@@ -21,7 +21,7 @@ class Job extends Model
     ];
 
     public function notes(){
-        return $this->hasMany(Note::class,'job_id');
+        return $this->hasMany(Note::class,'job_id')->latest();
     }
     public function business(){
         return $this->belongsTo(Customer::class,'customer_id');
