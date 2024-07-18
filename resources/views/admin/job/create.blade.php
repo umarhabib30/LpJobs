@@ -6,12 +6,12 @@
             <div class="card">
                 {{-- <h5 class="card-header">Basic Form</h5> --}}
                 <div class="card-body">
-                    <form method="post" action="{{ url('admin/job/store') }}">
+                    <form method="post" action="{{ url('admin/job/store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="input-select" class="col-form-label">Select Business</label>
-                                <select class="form-control select_customer" id="input-select" name="customer_id" >
+                                <select class="form-control select_customer" id="input-select" name="customer_id">
                                     <option value="-1" selected>Select Business</option>
                                     @foreach ($businesses as $business)
                                         <option value="{{ $business->id }}">{{ $business->business_name }}
@@ -84,7 +84,20 @@
                             <label for="exampleFormControlTextarea1">Notes</label>
                             <textarea class="form-control" id="job_notes" rows="3" name="notes"></textarea>
                         </div>
-                        <button  class="btn btn-primary" id="submit_button">Add Job</button>
+                        <h3>Add Images</h3>
+                        <button type="button" id="add-more" class="btn btn-primary">+Add</button>
+                        <div id="image-container">
+                            <div class="image-item mt-2 mb-4">
+                                <div class="row mt-3">
+                                    <div class="col-md-1 pr-0"> <button type="button"
+                                            class="remove-item btn btn-primary w-100">Remove</button></div>
+                                    <div class="col-md-11 pl-0"><input type="file" name="images[]" required
+                                            class="form-control"></div>
+                                </div>
+                                <textarea name="image_notes[]" placeholder="Enter note for the image" required class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary mt-3" id="submit_button">Add Job</button>
                     </form>
                 </div>
             </div>
@@ -92,34 +105,77 @@
     </div>
 @endsection
 @section('script')
-<script>
-   $(document).ready(function(){
-    $('body').on('click','#submit_button',function(e){
-        e.preventDefault();
+    <script>
+        $(document).ready(function() {
 
-        if($('.select_customer').val() == -1){
-            toastr.error('Please select business');
-        } else if($('.select_item').val() == -1){
-            toastr.error('Please select item');
-        } else if($('select[name="quantity"]').val() == -1){
-            toastr.error('Please select quantity');
-        } else if($('.select_size').val() == -1){
-            toastr.error('Please select size');
-        } else if($('.select_user').val() == -1){
-            toastr.error('Please select user');
-        } else if($('.select_status').val() == -1){
-            toastr.error('Please select status');
-        } else if($('.material_input').val().trim() == ''){
-            toastr.error('Please enter material');
-        } else if($('.price_input').val().trim() == ''){
-            toastr.error('Please enter price');
-        } else if($('#job_notes').val().trim() == ''){
-            toastr.error('Please enter notes');
-        } else {
-            $('form').submit();
-        }
-    });
-});
+            document.getElementById('add-more').addEventListener('click', function() {
+                var container = document.getElementById('image-container');
+                var newItem = document.createElement('div');
+                newItem.classList.add('image-item');
+                newItem.innerHTML = `
+            <div class="row mt-3">
+            <div class="col-md-1 pr-0"> <button type="button" class="remove-item btn btn-primary w-100">Remove</button></div>
+            <div class="col-md-11 pl-0"><input type="file" name="images[]" required class="form-control" ></div>
+            </div>
+            <textarea name="image_notes[]" placeholder="Enter note for the image" required class="form-control"></textarea>
+        `;
+                container.appendChild(newItem);
+            });
 
-</script>
+            document.getElementById('image-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-item')) {
+                    e.target.closest('.image-item').remove();
+                }
+            });
+
+
+            $('body').on('click', '#submit_button', function(e) {
+                e.preventDefault();
+
+                if ($('.select_customer').val() == -1) {
+                    toastr.error('Please select business');
+                } else if ($('.select_item').val() == -1) {
+                    toastr.error('Please select item');
+                } else if ($('select[name="quantity"]').val() == -1) {
+                    toastr.error('Please select quantity');
+                } else if ($('.select_size').val() == -1) {
+                    toastr.error('Please select size');
+                } else if ($('.select_user').val() == -1) {
+                    toastr.error('Please select user');
+                } else if ($('.select_status').val() == -1) {
+                    toastr.error('Please select status');
+                } else if ($('.material_input').val().trim() == '') {
+                    toastr.error('Please enter material');
+                } else if ($('.price_input').val().trim() == '') {
+                    toastr.error('Please enter price');
+                } else if ($('#job_notes').val().trim() == '') {
+                    toastr.error('Please enter notes');
+                } else {
+                    var isValid = true;
+
+                    $('#image-container .image-item').each(function() {
+                        var imageInput = $(this).find('input[type="file"]');
+                        var noteInput = $(this).find('textarea[name="image_notes[]"]');
+
+                        if (imageInput.val().trim() == '') {
+                            toastr.error('Please upload an image');
+                            isValid = false;
+                            return false; // Break out of each loop
+                        }
+
+                        if (noteInput.val().trim() == '') {
+                            toastr.error('Please enter a note for the image');
+                            isValid = false;
+                            return false; // Break out of each loop
+                        }
+                    });
+
+                    if (isValid) {
+                        $('form').submit();
+                    }
+                }
+            });
+
+        });
+    </script>
 @endsection

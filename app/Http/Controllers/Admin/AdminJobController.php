@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Job;
+use App\Models\JobAssignmentUpdates;
+use App\Models\JobImage;
 use App\Models\JobStatus;
+use App\Models\JobStatusUpdates;
 use App\Models\Note;
 use App\Models\Size;
 use App\Models\User;
@@ -46,9 +50,20 @@ class AdminJobController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             $user = Auth::user();
             $job = Job::create($request->all());
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $key => $image) {
+                    $path = ImageHelper::saveImage($image, 'images');
+                    JobImage::create([
+                        'job_id' => $job->id,
+                        'image' => $path,
+                        'note' => $request->image_notes[$key],
+                    ]);
+                }
+            }
             Note::create(['note' => $request->notes, 'job_id' => $job->id, 'user_id' => $user->id]);
             return redirect()->back()->with('success', 'Job added successfully');
         } catch (\Exception $e) {
@@ -58,7 +73,7 @@ class AdminJobController extends Controller
 
     public function details($id)
     {
-        $job = Job::find($id)->with('notes')->first();
+        $job = Job::where('id',$id)->with('notes')->first();
         $data = [
             'title' => 'Job Details',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/jobs/index' => 'Jobs', 'admin/job/details/' . $job->id => 'Job Details'),
@@ -81,6 +96,7 @@ class AdminJobController extends Controller
         Note::create($request->all());
         return redirect()->back()->with('success', 'Note added successfully');
     }
+
     public function edit($id)
     {
         $job = Job::find($id);
@@ -97,8 +113,10 @@ class AdminJobController extends Controller
         ];
         return view('admin.job.edit', $data);
     }
+
     public function update(Request $request)
     {
+        $user = Auth::user();
         $validator = Validator::make($request->all(), [
             'material' => 'required',
             'price' => 'required',
@@ -109,9 +127,19 @@ class AdminJobController extends Controller
             return redirect()->back()->withInput();
         }
         $job = Job::find($request->job_id);
+
+        if ($job->status_id != $request->status_id) {
+            JobStatusUpdates::create(['job_id' => $job->id, 'status_id' => $request->status_id, 'updated_by' => $user->id]);
+        }
+
+        if ($job->user_id != $request->user_id) {
+            JobAssignmentUpdates::create(['job_id' => $job->id, 'employee_id' => $request->user_id, 'updated_by' => $user->id]);
+        }
+
         $job->update($request->all());
         return redirect()->back()->with('success', 'Job updated successfully');
     }
+
     public function delete($id)
     {
         $Job = Job::find($id);

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Job;
+use App\Models\JobAssignmentUpdates;
 use App\Models\JobStatus;
+use App\Models\JobStatusUpdates;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -54,16 +56,22 @@ class EmployeeJobController extends Controller
         Note::create($request->all());
         return redirect()->back()->with('success', 'Note added successfully');
     }
+
     public function updateStatus(Request $request)
     {
+        $user = Auth::user();
         $job = Job::find($request->id);
         $job->update(['status_id' => $request->status_id]);
+        JobStatusUpdates::create(['job_id' => $job->id, 'status_id' => $request->status_id, 'updated_by' => $user->id]);
         return response()->json('Job status updated successfully');
     }
+
     public function updateUser(Request $request)
     {
+        $user = Auth::user();
         $job = Job::find($request->id);
         $job->update(['user_id' => $request->user_id]);
+        JobAssignmentUpdates::create(['job_id' => $job->id, 'employee_id' => $request->user_id, 'updated_by' => $user->id]);
         return response()->json('Job status updated successfully');
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminItemController;
 use App\Http\Controllers\Admin\AdminJobController;
+use App\Http\Controllers\Admin\AdminJobRequestController;
 use App\Http\Controllers\Admin\AdminJobStatusController;
 use App\Http\Controllers\Admin\AdminSizeController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
@@ -52,6 +53,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () 
     Route::post('job/update', [AdminJobController::class, 'update']);
     Route::get('job/delete/{id}', [AdminJobController::class, 'delete']);
 
+    /* ----------- Job Request Routes ----------- */
+    Route::get('job/request/pending', [AdminJobRequestController::class,'pending']);
+    Route::get('job/request/approved', [AdminJobRequestController::class,'approved']);
+    Route::get('job/request/approve/{id}', [AdminJobRequestController::class,'approve']);
+
     /* ----------- Items Routes ----------- */
     Route::get('item/create', [AdminItemController::class, 'create']);
     Route::post('item/store', [AdminItemController::class, 'store']);
@@ -88,7 +94,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () 
 
 Route::group(['prefix' => 'employee', 'middleware' => ['employee_auth']], function () {
 
-    Route::get('/dashboard', [EmployeeDashboardController::class, 'index']);
+    Route::get('/dashboard',        [EmployeeDashboardController::class, 'index']);
+    Route::get('/job/request/{id}', [EmployeeDashboardController::class, 'requestJob']);
 
      /* ----------- Job Routes ----------- */
      Route::get('jobs/index',           [EmployeeJobController::class,'index']);

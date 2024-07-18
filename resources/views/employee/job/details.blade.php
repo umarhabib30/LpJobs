@@ -50,9 +50,12 @@
                                 <tr>
                                     <td><span class="text-dark">User : </span></td>
                                     <td>
-                                        <select class="form-control" id="select_user" name="user_id" job-id ={{$job->id}}>
+                                        <select class="form-control" id="select_user" name="user_id"
+                                            job-id={{ $job->id }}>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->id }}"  @if ($user->id == $job->user_id) selected @endif>{{ $user->name }}</option>
+                                                <option value="{{ $user->id }}"
+                                                    @if ($user->id == $job->user_id) selected @endif>{{ $user->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -71,8 +74,8 @@
                                     </td>
                                 </tr>
                             </table>
-                            <a href="{{ url('admin/job/edit', $job->id) }}">
-                                <button class="btn btn-primary mt-4">Edit Job</button></a>
+                            {{-- <a href="{{ url('admin/job/edit', $job->id) }}">
+                                <button class="btn btn-primary mt-4">Edit Job</button></a> --}}
                         </div>
                         <div class="col-sm-6">
                             <form method="post" action="{{ url('employee/job/add-notes') }}" id="add_notes_form">
@@ -90,30 +93,81 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
+                                            <th>Date</th>
                                             <th>Notes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($job->notes as $key => $note)
-                                            <tr>
+                                            <tr class="read-notes" notes="{{ $note->note }}">
                                                 <td>{{ $note->user->name }}</td>
-                                                <td>{{ $note->note }}</td>
+                                                <td>{{ Carbon\Carbon::parse($note->created_at)->format('d-m-y') }}</td>
+                                                <td
+                                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">
+                                                    {{ $note->note }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
-
                     </div>
-
-
                 </div>
-
+            </div>
+            <div class="row">
+                @foreach ($job->images as $image)
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <!-- .card -->
+                        <div class="card card-figure">
+                            <!-- .card-figure -->
+                            <figure class="figure">
+                                <!-- .figure-img -->
+                                <div class="figure-img">
+                                    <img class="img-fluid" src="{{ asset($image->image) }}" alt="Card image cap">
+                                    <div class="figure-description">
+                                        <p class="text-muted mb-0">
+                                            {{ $image->note }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </figure>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
+@endsection
+@section('style')
+    <style>
+        .mytoast {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+            max-width: 400px;
+            word-wrap: break-word;
+
+        }
+
+        .mytoast::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            /* Position it above the toast */
+            right: 10px;
+            /* Align it to the right */
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #333;
+        }
+    </style>
 @endsection
 @section('script')
     <script>
@@ -155,29 +209,58 @@
             });
 
             // ----- update job user -----
-            $('body').on('change','#select_user',function(e){
+            $('body').on('change', '#select_user', function(e) {
                 e.preventDefault();
                 var user_id = $(this).val();
                 var id = $(this).attr('job-id');
                 var data = {
-                    id :id,
-                    user_id:user_id
+                    id: id,
+                    user_id: user_id
                 };
                 $.ajax({
-                    url : "{{url('employee/job/update-user')}}",
+                    url: "{{ url('employee/job/update-user') }}",
                     type: "post",
-                    headers : {
+                    headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
-                    data : data,
+                    data: data,
                     dataType: "json",
-                    success:function(response){
+                    success: function(response) {
                         toastr.success(response);
                     },
-                    error:function(xhr, status, error){
+                    error: function(xhr, status, error) {
                         toastr.error(error);
                     }
                 });
+            });
+
+            // ------ opening notes details model----------
+            $('body').append('<div id="custom-toast" class="mytoast"></div>');
+
+            $(document).on('mouseenter', '.read-notes', function(e) {
+                e.preventDefault();
+                let notes = $(this).attr('notes');
+                let toast = $('#custom-toast');
+
+                toast.text(notes);
+
+                let rowPosition = $(this).offset();
+                let rowWidth = $(this).outerWidth();
+                let toastHeight = toast.outerHeight();
+                toast.css({
+                    top: (rowPosition.top - toastHeight - 10) + 'px',
+                    left: (rowPosition.left + rowWidth) + 'px',
+                    transform: 'translate(-100%, 0)',
+                });
+                toast.stop().fadeIn(200, function() {
+                    $(this).css('opacity',
+                        1);
+                });
+            });
+
+            $(document).on('mouseleave', '.read-notes', function(e) {
+                $('#custom-toast').css('opacity', 0).fadeOut(
+                    200);
             });
 
         });

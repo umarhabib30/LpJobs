@@ -38,4 +38,15 @@ class Job extends Model
     public function status(){
         return $this->belongsTo(JobStatus::class,'status_id');
     }
+
+    public function statusUpdates(){
+        return $this->hasMany(JobStatusUpdates::class,'job_id')->latest();
+    }
+    public function employeeUpdates(){
+        return $this->hasMany(JobAssignmentUpdates::class,'job_id');
+    }
+
+    public function images(){
+        return $this->hasMany(JobImage::class,'job_id');
+    }
 }

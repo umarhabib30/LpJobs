@@ -135,6 +135,21 @@
                                 </div>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link @if ($active == 'job request') active @endif" href="#"
+                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-8"
+                                    aria-controls="submenu-8"><i class="fas fa-fw fa-chart-pie"></i>Job Requests</a>
+                                <div id="submenu-8" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('admin/job/request/pending') }}">Pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('admin/job/request/approved') }}">Approved</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link @if ($active == 'Items') active @endif" href="#"
                                     data-toggle="collapse" aria-expanded="false" data-target="#submenu-4"
                                     aria-controls="submenu-4"><i class=" fas fa-dolly-flatbed"></i>Items</a>
