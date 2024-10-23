@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminBusinessController;
+use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminItemController;
@@ -8,8 +9,11 @@ use App\Http\Controllers\Admin\AdminJobController;
 use App\Http\Controllers\Admin\AdminJobRequestController;
 use App\Http\Controllers\Admin\AdminJobStatusController;
 use App\Http\Controllers\Admin\AdminSizeController;
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerJobController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\EmployeeJobController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +46,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () 
     Route::get('business/edit/{id}', [AdminBusinessController::class, 'edit']);
     Route::post('business/update', [AdminBusinessController::class, 'update']);
     Route::get('business/delete/{id}', [AdminBusinessController::class, 'delete']);
+
+    /* ----------- Customer Routes ----------- */
+    Route::get('customer/index', [AdminCustomerController::class, 'index']);
+    Route::get('customer/create', [AdminCustomerController::class, 'create']);
+    Route::post('customer/store', [AdminCustomerController::class, 'store']);
+    Route::get('customer/edit/{id}', [AdminCustomerController::class, 'edit']);
+    Route::post('customer/update', [AdminCustomerController::class, 'update']);
+    Route::get('customer/delete/{id}', [AdminCustomerController::class, 'delete']);
 
     /* ----------- Jobs Routes ----------- */
     Route::get('jobs/index', [AdminJobController::class, 'index']);
@@ -98,9 +110,25 @@ Route::group(['prefix' => 'employee', 'middleware' => ['employee_auth']], functi
     Route::get('/job/request/{id}', [EmployeeDashboardController::class, 'requestJob']);
 
      /* ----------- Job Routes ----------- */
-     Route::get('jobs/index',           [EmployeeJobController::class,'index']);
-     Route::get('job/details/{id}',     [EmployeeJobController::class,'details']);
-     Route::post('job/add-notes',       [EmployeeJobController::class,'addNote']);
-     Route::post('job/update-status',   [EmployeeJobController::class,'updateStatus']);
-     Route::post('job/update-user',     [EmployeeJobController::class,'updateUser']);
+     Route::get('jobs/index',                   [EmployeeJobController::class,'index']);
+     Route::get('job/details/{id}',             [EmployeeJobController::class,'details']);
+     Route::post('job/add-notes',               [EmployeeJobController::class,'addNote']);
+     Route::post('job/add-customer-notes',      [EmployeeJobController::class,'addCustomerNote']);
+     Route::post('job/update-status',           [EmployeeJobController::class,'updateStatus']);
+     Route::post('job/update-user',             [EmployeeJobController::class,'updateUser']);
+     Route::post('job/upload-file',             [EmployeeJobController::class,'uploadFile']);
+});
+
+Route::group(['prefix' => 'customer', 'middleware' => ['customer_auth']], function () {
+    Route::get('/dashboard',[CustomerDashboardController::class,'index']);
+
+     /* ----------- Job Routes ----------- */
+    Route::get('/business/jobs/{id}',       [CustomerJobController::class,'index']);
+    Route::get('/job/details/{id}',         [CustomerJobController::class,'show']);
+    Route::post('job/add-customer-notes',   [CustomerJobController::class,'addCustomerNote']);
+    Route::post('job/upload-file',          [CustomerJobController::class,'uploadFile']);
+});
+
+Route::group(['prefix' => 'manager', 'middleware' => ['manager_auth']], function () {
+
 });

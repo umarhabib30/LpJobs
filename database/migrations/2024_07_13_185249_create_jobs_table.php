@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
             $table->foreignId('size_id')->constrained('sizes')->onDelete('cascade');
             $table->string('quantity');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->string('material');
             $table->string('price');
             $table->string('file')->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('order_taken_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('assigned_to_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('status_id')->constrained('job_statuses')->onDelete('cascade');
             $table->timestamps();
         });

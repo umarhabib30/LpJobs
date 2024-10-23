@@ -24,7 +24,9 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
-     *
+     * role 1 for the admin
+     * role 2 for the employee
+     * role 3 for the customer
      * @var string
      */
     public function redirectTo()
@@ -35,6 +37,9 @@ class LoginController extends Controller
                 break;
             case 2:
                 return '/employee/dashboard';
+                break;
+            case 3:
+                return '/customer/dashboard';
                 break;
             default:
                 return '/';

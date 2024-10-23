@@ -104,6 +104,37 @@
                                         class="badge badge-success">6</span></a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link @if ($active == 'employee') active @endif" href="#"
+                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-7"
+                                    aria-controls="submenu-7"><i class=" fas fa-users"></i>Employees</a>
+                                <div id="submenu-7" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('admin/employee/create') }}">Add Employee</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('admin/employee/index') }}">View Employees</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  @if ($active == 'Customer') active @endif" href="#"
+                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-15"
+                                    aria-controls="submenu-15"><i class="fa fa-fw fa-rocket"></i>Customer</a>
+                                <div id="submenu-15" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('admin/customer/create') }}">Add customer
+                                                <span class="badge badge-secondary"></span></a>
+                                            <a class="nav-link" href="{{ url('admin/customer/index') }}">View All<span
+                                                    class="badge badge-secondary"></span></a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link  @if ($active == 'Business') active @endif" href="#"
                                     data-toggle="collapse" aria-expanded="false" data-target="#submenu-2"
                                     aria-controls="submenu-2"><i class="fa fa-fw fa-rocket"></i>Business</a>
@@ -119,6 +150,7 @@
                                     </ul>
                                 </div>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link @if ($active == 'Jobs') active @endif" href="#"
                                     data-toggle="collapse" aria-expanded="false" data-target="#submenu-3"
@@ -196,21 +228,7 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link @if ($active == 'employee') active @endif" href="#"
-                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-7"
-                                    aria-controls="submenu-7"><i class=" fas fa-users"></i>Employees</a>
-                                <div id="submenu-7" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/employee/create') }}">Add Employee</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/employee/index') }}">View Employees</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
+
                         </ul>
                     </div>
                 </nav>
@@ -227,7 +245,7 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">{{ $active }}</h2>
+                            <h2 class="pageheader-title"> {{$active}}</h2>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">

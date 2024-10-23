@@ -9,22 +9,27 @@ class Job extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'customer_id',
+        'business_id',
         'size_id',
         'quantity',
         'item_id',
         'material',
         'price',
         'file',
-        'user_id',
+        'order_taken_by',
+        'assigned_to_id',
         'status_id',
     ];
 
     public function notes(){
         return $this->hasMany(Note::class,'job_id')->latest();
     }
+
+    public function customerNotes(){
+        return $this->hasMany(CustomerNote::class,'job_id')->latest();
+    }
     public function business(){
-        return $this->belongsTo(Customer::class,'customer_id');
+        return $this->belongsTo(Business::class,'business_id');
     }
     public function size(){
         return $this->belongsTo(Size::class,'size_id');
@@ -32,8 +37,11 @@ class Job extends Model
     public function item(){
         return $this->belongsTo(Item::class,'item_id');
     }
-    public function user(){
-        return $this->belongsTo(User::class,'user_id');
+    public function orderTakenBy(){
+        return $this->belongsTo(User::class,'order_taken_by');
+    }
+    public function assignedTo(){
+        return $this->belongsTo(User::class,'assigned_to_id');
     }
     public function status(){
         return $this->belongsTo(JobStatus::class,'status_id');
@@ -47,6 +55,6 @@ class Job extends Model
     }
 
     public function images(){
-        return $this->hasMany(JobImage::class,'job_id');
+        return $this->hasMany(JobImage::class,'job_id')->latest();
     }
 }

@@ -27,13 +27,13 @@ class EmployeeDashboardController extends Controller
         $job = Job::find($id);
         $user = Auth::user();
         $request = JobRequest::where('job_id', $job->id)->where('assigned', false)->first();
-        if($job->user_id == $user->id){
+        if($job->assigned_to_id == $user->id){
             return redirect()->back()->with('error', 'This job is already assigned to you');
         }
         if ($request) {
             return redirect()->back()->with('error', 'Request for this job already exist');
         }
-        JobRequest::create(['job_id' => $job->id, 'employee_id' => $job->user->id, 'requested_by' => $user->id]);
+        JobRequest::create(['job_id' => $job->id, 'employee_id' => $job->assignedTo->id, 'requested_by' => $user->id]);
         return redirect()->back()->with('success', 'Request is sent to admin for job assignment');
     }
 }

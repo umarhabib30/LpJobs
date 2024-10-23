@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('business_notes', function (Blueprint $table) {
             $table->id();
             $table->longText('notes');
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            // $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessNotes;
+use App\Models\Business;
 use App\Models\Category;
-use App\Models\Customer;
-use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +15,7 @@ class AdminBusinessController extends Controller
 {
     public function index()
     {
-        $business = Customer::all();
+        $business = Business::all();
         $data = [
             'title' => 'Business list',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/business/index' => 'Businesses'),
@@ -29,11 +28,16 @@ class AdminBusinessController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $customers = User::where('role', 3)->get();
+        if ($customers->isEmpty()) {
+            return redirect()->back()->with('error', 'Please add a customer first');
+        }
         $data = [
             'title' => 'Business list',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/business/create' => 'Add Business'),
             'active' => 'Business',
             'categories' => $categories,
+            'customers' => $customers,
         ];
         return view('admin.business.create', $data);
     }
@@ -41,7 +45,7 @@ class AdminBusinessController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'cat_id' => 'required',
+            'user_id' => 'required',
             'business_name' => 'required',
             'address' => 'required',
             'road' => 'required',
@@ -50,7 +54,7 @@ class AdminBusinessController extends Controller
             'post_code' => 'required',
             'tel' => 'required',
             'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:businesses'],
             'web' => 'required|url',
             'notes' => 'required',
         ]);
@@ -60,18 +64,16 @@ class AdminBusinessController extends Controller
             return redirect()->back()->withInput();
         }
         try {
-            $customer = Customer::create($request->all());
-            BusinessNotes::create(['notes' => $request->notes, 'customer_id' => $customer->id]);
+            Business::create($request->all());
             return redirect()->back()->with('success', 'Business added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
-
         }
     }
 
     public function edit($id)
     {
-        $business = Customer::find($id);
+        $business = Business::find($id);
         $categories = Category::all();
         $data = [
             'title' => 'Business list',
@@ -85,10 +87,9 @@ class AdminBusinessController extends Controller
 
     public function update(Request $request)
     {
-        $business = Customer::find($request->business_id);
-        
+        $business = Business::find($request->business_id);
+
         $validator = Validator::make($request->all(), [
-            'cat_id' => 'required',
             'business_name' => 'required',
             'address' => 'required',
             'road' => 'required',
@@ -97,7 +98,7 @@ class AdminBusinessController extends Controller
             'post_code' => 'required',
             'tel' => 'required',
             'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255',Rule::unique('customers', 'email')->ignore($business->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers', 'email')->ignore($business->id)],
             'web' => 'required|url',
             'notes' => 'required',
         ]);
@@ -114,12 +115,11 @@ class AdminBusinessController extends Controller
     public function delete($id)
     {
         try {
-            $business = Customer::find($id);
+            $business = Business::find($id);
             $business->delete();
             return redirect()->back()->with('success', 'Business deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
-
         }
     }
 }

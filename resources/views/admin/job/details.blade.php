@@ -48,9 +48,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><span class="text-dark">User : </span></td>
+                                    <td><span class="text-dark">Assigned to : </span></td>
                                     <td>
-                                        <p>{{ $job->user->name }}</p>
+                                        <p>{{ $job->assignedTo->name }}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -115,7 +115,7 @@
                         <figure class="figure">
                             <!-- .figure-img -->
                             <div class="figure-img">
-                                <img class="img-fluid" src="{{asset($image->image)}}" alt="Card image cap">
+                                <img class="img-fluid" src="{{asset($image->file)}}" alt="Card image cap">
                                 <div class="figure-description">
                                     <p class="text-muted mb-0">
                                        {{$image->note}}

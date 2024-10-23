@@ -9,6 +9,10 @@ class JobImage extends Model
 {
     use HasFactory;
     protected $fillable =[
-        'job_id','image','note'
+        'user_id','job_id','file','file_type','note',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

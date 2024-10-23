@@ -14,7 +14,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Category</th>
+                                   
                                     <th>Address</th>
                                     <th>Mobile</th>
                                     <th>Email</th>
@@ -27,7 +27,7 @@
                                     <tr>
                                         <td>{{ $business->id }}</td>
                                         <td>{{ $business->business_name }}</td>
-                                        <td>{{ $business->category->name }}</td>
+
                                         <td>{{ $business->address }}</td>
                                         <td>{{ $business->mobile }}</td>
                                         <td>{{ $business->email }}</td>

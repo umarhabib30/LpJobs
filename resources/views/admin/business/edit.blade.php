@@ -10,7 +10,7 @@
                         @csrf
                         <input type="hidden" name="notes_id" id="" value="{{ @$business->notes_id }}">
                         <input type="hidden" name="business_id" id="" value="{{ @$business->id }}">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="input-select">Select Category</label>
                             <select class="form-control" id="input-select" name="cat_id">
 
@@ -19,6 +19,14 @@
                                         {{ $category->name }}</option>
                                 @endforeach
                             </select>
+                        </div> --}}
+                        <div class="row">
+
+                            <div class="form-group col-md-6">
+                                <label for="customer" class="col-form-label">Customer</label>
+                                <input id="customer" type="text" class="form-control" name="user_id"
+                                    value="{{ $business->customer->name }}" readonly>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">

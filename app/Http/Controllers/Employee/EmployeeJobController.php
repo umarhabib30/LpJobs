@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
+use App\Models\CustomerNote;
 use App\Models\Job;
 use App\Models\JobAssignmentUpdates;
+use App\Models\JobImage;
 use App\Models\JobStatus;
 use App\Models\JobStatusUpdates;
 use App\Models\Note;
@@ -19,7 +22,7 @@ class EmployeeJobController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $jobs = Job::where('user_id', $user->id)->latest()->get();
+        $jobs = Job::where('assigned_to_id', $user->id)->latest()->get();
         $data = [
             'title' => 'Jobs',
             'breadcrumbs' => array("employee/dashboard" => "Dashboard"),
@@ -31,7 +34,7 @@ class EmployeeJobController extends Controller
 
     public function details($id)
     {
-        $job = Job::with('notes')->find($id);
+        $job = Job::with('notes')->with('customerNotes')->find($id);
         $data = [
             'title' => 'Job Details',
             'breadcrumbs' => array("employee/dashboard" => "Dashboard", 'employee/jobs/index' => 'Jobs', 'employee/job/details/' . $job->id => 'Job Details'),
@@ -54,7 +57,20 @@ class EmployeeJobController extends Controller
             return redirect()->back()->withInput();
         }
         Note::create($request->all());
-        return redirect()->back()->with('success', 'Note added successfully');
+        return redirect()->back()->with('success', 'Admin note added successfully');
+    }
+
+    public function addCustomerNote(Request $request){
+        $validator = Validator::make($request->all(), [
+            'note' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
+        }
+        CustomerNote::create($request->all());
+        return redirect()->back()->with('success', 'Customer note added successfully');
     }
 
     public function updateStatus(Request $request)
@@ -73,5 +89,31 @@ class EmployeeJobController extends Controller
         $job->update(['user_id' => $request->user_id]);
         JobAssignmentUpdates::create(['job_id' => $job->id, 'employee_id' => $request->user_id, 'updated_by' => $user->id]);
         return response()->json('Job status updated successfully');
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($request->hasFile('images')) {
+
+            foreach ($request->file('images') as $key => $file) {
+                $mimeType = $file->getMimeType();
+                if (str_starts_with($mimeType, 'image/')) {
+                    $fileType = 'img';
+                } else {
+                    $fileType = 'other';
+                }
+                $path = FileHelper::save($file, 'images');
+                JobImage::create([
+                    'user_id' => $user->id,
+                    'job_id' => $request->job_id,
+                    'file' => $path,
+                    'note' => $request->image_notes[$key],
+                    'file_type' => $fileType,
+                ]);
+            }
+        }
+        return redirect()->back()->with('success','File uploaded successfully');
     }
 }

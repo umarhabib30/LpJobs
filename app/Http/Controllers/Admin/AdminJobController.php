@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
+use App\Models\Business;
 use App\Models\Item;
 use App\Models\Job;
 use App\Models\JobAssignmentUpdates;
@@ -39,7 +39,7 @@ class AdminJobController extends Controller
             'title' => 'Add Job',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/job/create' => 'Add Job'),
             'active' => 'Jobs',
-            'businesses' => Customer::all(),
+            'businesses' => Business::all(),
             'items' => Item::all(),
             'sizes' => Size::all(),
             'users' => User::where('role', 2)->get(),
@@ -58,9 +58,11 @@ class AdminJobController extends Controller
                 foreach ($request->file('images') as $key => $image) {
                     $path = ImageHelper::saveImage($image, 'images');
                     JobImage::create([
+                        'user_id' => $user->id,
                         'job_id' => $job->id,
-                        'image' => $path,
+                        'file' => $path,
                         'note' => $request->image_notes[$key],
+                        'file_type' => 'img',
                     ]);
                 }
             }
@@ -104,8 +106,9 @@ class AdminJobController extends Controller
             'title' => 'Edit Job',
             'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/jobs/index' => 'Jobs', 'admin/job/edit/' . $job->id => 'Edit Job'),
             'active' => 'Jobs',
+            'custom' => 'Job no:'.$job->id,
             'job' => $job,
-            'businesses' => Customer::all(),
+            'businesses' => Business::all(),
             'items' => Item::all(),
             'sizes' => Size::all(),
             'users' => User::where('role', 2)->get(),

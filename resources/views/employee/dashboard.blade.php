@@ -18,7 +18,7 @@
                                 <th>Size</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
-                                <th>User</th>
+                                <th>Assigned to</th>
                                 <th style="width: 120px">Request to Assign</th>
                             </tr>
                         </thead>
@@ -30,9 +30,9 @@
                                         <td>{{ $job->business->business_name }}</td>
                                         <td>{{ $job->item->name }}</td>
                                         <td>{{ $job->size->size }}</td>
-                                        <td>{{ $job->quantity }}</td>
+                                        <td>{{ $job->quantity }}</td>   
                                         <td>{{ $job->status->status }}</td>
-                                        <td>{{ $job->user->name }}</td>
+                                        <td>{{ $job->assignedTo->name }}</td>
                                         <td><a href="{{ url('employee/job/request', $job->id) }}"><button
                                                     class="btn btn-primary w-100">Request</button></a></td>
                                     </tr>

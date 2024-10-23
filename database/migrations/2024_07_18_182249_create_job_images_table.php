@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('job_images', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
-            $table->string('image');
+            $table->string('file');
+            $table->string('file_type')->nullable();
             $table->longText('note');
             $table->timestamps();
         });

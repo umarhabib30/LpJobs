@@ -9,9 +9,10 @@
                     <form method="post" action="{{ url('admin/job/store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
+                            {{-- select business --}}
                             <div class="form-group col-md-6">
                                 <label for="input-select" class="col-form-label">Select Business</label>
-                                <select class="form-control select_customer" id="input-select" name="customer_id">
+                                <select class="form-control select_customer" id="input-select" name="business_id">
                                     <option value="-1" selected>Select Business</option>
                                     @foreach ($businesses as $business)
                                         <option value="{{ $business->id }}">{{ $business->business_name }}
@@ -19,6 +20,15 @@
                                     @endforeach
                                 </select>
                             </div>
+                            {{-- order taken by --}}
+                            <div class="form-group col-md-6">
+                                <label for="input-select" class="col-form-label">Order Taken By</label>
+                                <input type="hidden" name="order_taken_by" value="{{ Auth::user()->id }}">
+                                <input type="text" class="form-control material_input" value="{{ Auth::user()->name }}"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="business_name" class="col-form-label">Select Item</label>
                                 <select class="form-control select_item" id="input-select" name="item_id">
@@ -29,34 +39,24 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="input-select select_quantity" class="col-form-label">Quantity</label>
-                                <select class="form-control" id="input-select" name="quantity">
-                                    <option selected value="-1">Select Quantity</option>
-                                    @for ($i = 1; $i <= 10; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
+                                <label for="input-select" class="col-form-label">Assign to</label>
+                                <select class="form-control select_user" id="input-select" name="assigned_to_id">
+                                    <option selected value="-1">Select User</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
+
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="business_name" class="col-form-label">Size</label>
                                 <select class="form-control select_size" id="input-select" name="size_id">
                                     <option selected value="-1">Select Size</option>
                                     @foreach ($sizes as $size)
                                         <option value="{{ $size->id }}">{{ $size->size }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="input-select" class="col-form-label">Order Taken By</label>
-                                <select class="form-control select_user" id="input-select" name="user_id">
-                                    <option selected value="-1">Select User</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -72,18 +72,33 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
+                                <label for="input-select select_quantity" class="col-form-label">Quantity</label>
+                                <select class="form-control" id="input-select" name="quantity">
+                                    <option selected value="-1">Select Quantity</option>
+                                    @for ($i = 1; $i <= 10; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleFormControlTextarea1">Notes</label>
+                                <textarea class="form-control" id="job_notes" rows="1" name="notes"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
                                 <label for="road" class="col-form-label">Material</label>
                                 <input id="road" type="text" class="form-control material_input" name="material">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="town" class="col-form-label">Price</label>
                                 <input id="town" type="text" class="form-control price_input" name="price">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Notes</label>
-                            <textarea class="form-control" id="job_notes" rows="3" name="notes"></textarea>
-                        </div>
+
+
                         <h3>Add Images</h3>
                         <button type="button" id="add-more" class="btn btn-primary">+Add</button>
                         <div id="image-container">
@@ -113,12 +128,12 @@
                 var newItem = document.createElement('div');
                 newItem.classList.add('image-item');
                 newItem.innerHTML = `
-            <div class="row mt-3">
-            <div class="col-md-1 pr-0"> <button type="button" class="remove-item btn btn-primary w-100">Remove</button></div>
-            <div class="col-md-11 pl-0"><input type="file" name="images[]" required class="form-control" ></div>
-            </div>
-            <textarea name="image_notes[]" placeholder="Enter note for the image" required class="form-control"></textarea>
-        `;
+                <div class="row mt-3">
+                <div class="col-md-1 pr-0"> <button type="button" class="remove-item btn btn-primary w-100">Remove</button></div>
+                <div class="col-md-11 pl-0"><input type="file" name="images[]" required class="form-control" ></div>
+                </div>
+                <textarea name="image_notes[]" placeholder="Enter note for the image" required class="form-control"></textarea>
+                 `;
                 container.appendChild(newItem);
             });
 

@@ -18,7 +18,7 @@
                                     <th>Size</th>
                                     <th>Quantity</th>
                                     <th>Status</th>
-                                    <th>User</th>
+                                    <th>Assigned to</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                     <th>Details</th>
@@ -34,7 +34,7 @@
                                             <td>{{ $job->size->size }}</td>
                                             <td>{{ $job->quantity }}</td>
                                             <td>{{ $job->status->status }}</td>
-                                            <td>{{ $job->user->name }}</td>
+                                            <td>{{ $job->assignedTo->name }}</td>
                                             <td><a href="{{ url('admin/job/edit', $job->id) }}"><button
                                                         class="btn btn-primary w-100">Edit</button></a></td>
                                             <td><a class="delete_job" job-id={{ $job->id }}><button

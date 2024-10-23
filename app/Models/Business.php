@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Business extends Model
 {
     use HasFactory;
     protected $fillable=[
+        'user_id',
         'business_name',
-        'cat_id',
-        'sub_cat_id',
+        // 'cat_id',
+        // 'sub_cat_id',
         'address',
         'road',
         'town',
@@ -27,8 +28,13 @@ class Customer extends Model
         'notes',
     ];
 
-    public function category(){
-        return $this->belongsTo(Category::class,'cat_id');
+
+    public function customer(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function jobs(){
+        return $this->hasMany(Job::class,'business_id');
     }
 
     public function notes(){

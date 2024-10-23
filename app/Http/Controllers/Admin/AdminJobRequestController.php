@@ -36,7 +36,7 @@ class AdminJobRequestController extends Controller
         try {
             $request = JobRequest::find($id);
             $job = Job::find($request->job_id);
-            $job->update(['user_id' => $request->requested_by]);
+            $job->update(['assigned_to_id' => $request->requested_by]);
             $request->update(['assigned' => true]);
             return redirect()->back()->with('success', 'Job request approved successfully');
         } catch (\Exception $e) {

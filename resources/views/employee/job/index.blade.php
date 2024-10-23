@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <!-- ============================================================== -->
-        <!-- basic table  -->
+        <!-- jobs table  -->
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
@@ -18,7 +18,7 @@
                                     <th>Size</th>
                                     <th>Quantity</th>
                                     <th>Status</th>
-                                    <th>User</th>
+                                    <th>Assigned to</th>
                                     <th style="width: 120px;">Details</th>
                                 </tr>
                             </thead>
@@ -32,7 +32,7 @@
                                             <td>{{ $job->size->size }}</td>
                                             <td>{{ $job->quantity }}</td>
                                             <td>{{ $job->status->status }}</td>
-                                            <td>{{ $job->user->name }}</td>
+                                            <td>{{ $job->assignedTo->name }}</td>
                                             <td><a href="{{ url('employee/job/details', $job->id) }}"><button
                                                         class="btn btn-primary w-100">View</button></a></td>
                                         </tr>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <!-- ============================================================== -->
-        <!-- end basic table  -->
+        <!-- end jobs table  -->
         <!-- ============================================================== -->
     </div>
 @endsection
