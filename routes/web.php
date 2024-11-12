@@ -9,10 +9,13 @@ use App\Http\Controllers\Admin\AdminJobController;
 use App\Http\Controllers\Admin\AdminJobRequestController;
 use App\Http\Controllers\Admin\AdminJobStatusController;
 use App\Http\Controllers\Admin\AdminSizeController;
+use App\Http\Controllers\Customer\CustomerAccountController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerForgetPasswordController;
 use App\Http\Controllers\Customer\CustomerJobController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\EmployeeJobController;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +37,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/* ----------- Customer Password Reset ----------- */
+Route::get('forget-password', [CustomerForgetPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [CustomerForgetPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+Route::get('reset-password/{token}', [CustomerForgetPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [CustomerForgetPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 /* ----------- Admin Routes ----------- */
 Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () {
@@ -102,6 +111,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () 
     Route::get('employee/edit/{id}', [AdminEmployeeController::class, 'edit']);
     Route::post('employee/update', [AdminEmployeeController::class, 'update']);
     Route::post('employee/password/update', [AdminEmployeeController::class, 'updatePassword']);
+
+    /* ----------- Employee Routes ----------- */
+    Route::post('generate/invoice',[InvoiceController::class,'export']);
+
 });
 
 Route::group(['prefix' => 'employee', 'middleware' => ['employee_auth']], function () {
@@ -127,6 +140,10 @@ Route::group(['prefix' => 'customer', 'middleware' => ['customer_auth']], functi
     Route::get('/job/details/{id}',         [CustomerJobController::class,'show']);
     Route::post('job/add-customer-notes',   [CustomerJobController::class,'addCustomerNote']);
     Route::post('job/upload-file',          [CustomerJobController::class,'uploadFile']);
+
+     /* ----------- Job Routes ----------- */
+     Route::get('/account',[CustomerAccountController::class,'index']);
+     Route::post('/password/update',[CustomerAccountController::class,'updatePassword']);
 });
 
 Route::group(['prefix' => 'manager', 'middleware' => ['manager_auth']], function () {

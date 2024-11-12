@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login</title>
+    <title>Forget Password</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo.png') }}">
 
@@ -37,9 +37,9 @@
     <!-- ============================================================== -->
     <div class="splash-container">
         <div class="card ">
-            <div class="card-header text-center"><img class="logo-img rounded-circle" src="{{asset('assets/images/logo.png')}}" alt="logo" height="80"><span class="splash-description">Please enter your user information.</span></div>
+            <div class="card-header text-center"><img class="logo-img rounded-circle" src="{{asset('assets/images/logo.png')}}" alt="logo" height="80"><span class="splash-description">Reset Password</span></div>
             <div class="card-body">
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('forget.password.post') }}">
                     @csrf
                     <div class="form-group">
                         <label for="email">{{ __('Email Address') }}</label>
@@ -52,23 +52,8 @@
                         </span>
                      @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="password">{{ __('Password') }}</label>
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                        <a href="{{route('forget.password.get')}}" class="btn">Forget Password?</a>
 
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}><span class="custom-control-label"> {{ __('Remember Me') }}</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block " style="background-color: black !important; border: none !important;">Log in</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block " style="background-color: black !important; border: none !important;">Send Password Reset Link</button>
                 </form>
             </div>
             <!-- <div class="card-footer bg-white p-0  ">

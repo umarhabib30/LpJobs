@@ -39,8 +39,9 @@
         <div class="card ">
             <div class="card-header text-center"><img class="logo-img rounded-circle" src="{{asset('assets/images/logo.png')}}" alt="logo" height="80"><span class="splash-description">Please enter your user information.</span></div>
             <div class="card-body">
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('reset.password.post') }}">
                     @csrf
+                    <input type="hidden" name="token" id="" value="{{$token}}">
                     <div class="form-group">
                         <label for="email">{{ __('Email Address') }}</label>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -55,8 +56,6 @@
                     <div class="form-group">
                         <label for="password">{{ __('Password') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                        <a href="{{route('forget.password.get')}}" class="btn">Forget Password?</a>
-
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -64,11 +63,16 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}><span class="custom-control-label"> {{ __('Remember Me') }}</span>
-                        </label>
+                        <label for="password">{{ __('Confirm Password') }}</label>
+                        <input id="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" required >
+                        @error('password_confirmation')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block " style="background-color: black !important; border: none !important;">Log in</button>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block " style="background-color: black !important; border: none !important;">Reset</button>
                 </form>
             </div>
             <!-- <div class="card-footer bg-white p-0  ">
