@@ -53,25 +53,32 @@ class AdminJobController extends Controller
     {
 
         $user = Auth::user();
+        try {
         $job = Job::create($request->all());
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $key => $image) {
-                $path = ImageHelper::saveImage($image, 'images');
+                $mimeType = $file->getMimeType();
+                if (str_starts_with($mimeType, 'image/')) {
+                    $fileType = 'img';
+                } else {
+                    $fileType = 'other';
+                }
+                $path = FileHelper::save($file, 'images');
                 JobImage::create([
                     'user_id' => $user->id,
                     'job_id' => $job->id,
                     'file' => $path,
                     'note' => $request->image_notes[$key],
-                    'file_type' => 'img',
+                    'file_type' =>  $fileType,
                 ]);
             }
         }
         Note::create(['note' => $request->notes, 'job_id' => $job->id, 'user_id' => $user->id]);
         return redirect()->back()->with('success', 'Job added successfully');
-        // try {
-        // } catch (\Exception $e) {
-        //     return redirect()->back()->with('error', $e->getMessage());
-        // }
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function details($id)
