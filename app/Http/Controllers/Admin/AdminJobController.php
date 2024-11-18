@@ -52,26 +52,26 @@ class AdminJobController extends Controller
     public function store(Request $request)
     {
 
-        try {
-            $user = Auth::user();
-            $job = Job::create($request->all());
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $key => $image) {
-                    $path = ImageHelper::saveImage($image, 'images');
-                    JobImage::create([
-                        'user_id' => $user->id,
-                        'job_id' => $job->id,
-                        'file' => $path,
-                        'note' => $request->image_notes[$key],
-                        'file_type' => 'img',
-                    ]);
-                }
+        $user = Auth::user();
+        $job = Job::create($request->all());
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $key => $image) {
+                $path = ImageHelper::saveImage($image, 'images');
+                JobImage::create([
+                    'user_id' => $user->id,
+                    'job_id' => $job->id,
+                    'file' => $path,
+                    'note' => $request->image_notes[$key],
+                    'file_type' => 'img',
+                ]);
             }
-            Note::create(['note' => $request->notes, 'job_id' => $job->id, 'user_id' => $user->id]);
-            return redirect()->back()->with('success', 'Job added successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
         }
+        Note::create(['note' => $request->notes, 'job_id' => $job->id, 'user_id' => $user->id]);
+        return redirect()->back()->with('success', 'Job added successfully');
+        // try {
+        // } catch (\Exception $e) {
+        //     return redirect()->back()->with('error', $e->getMessage());
+        // }
     }
 
     public function details($id)
