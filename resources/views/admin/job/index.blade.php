@@ -6,8 +6,9 @@
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
-                <div class="card-header">
-                    <h5>Jobs</h5>
+                <div class="card-header d-flex justify-content-between">
+                    <h5 >Jobs</h5>
+                    <a href="{{ url('admin/job/create') }}" class="btn btn-primary">Add Job</a>
                 </div>
                 <div class="card-body">
                     <!-- Form for job selection -->

@@ -6,7 +6,10 @@
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
-                <h5 class="card-header">Businesses</h5>
+                <div class="card-header d-flex justify-content-between">
+                    <h5 >Businesses</h5>
+                    <a href="{{ url('admin/business/create') }}" class="btn btn-primary">Add Businesses</a>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered first">
@@ -14,7 +17,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                   
+
                                     <th>Address</th>
                                     <th>Mobile</th>
                                     <th>Email</th>

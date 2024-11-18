@@ -44,6 +44,9 @@ Route::post('forget-password', [CustomerForgetPasswordController::class, 'submit
 Route::get('reset-password/{token}', [CustomerForgetPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [CustomerForgetPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
+Route::get('customer/complete-profile/{id}',[AdminCustomerController::class,'getProfile']);
+Route::post('customer/store-profile',[AdminCustomerController::class,'storeProfile']);
+
 /* ----------- Admin Routes ----------- */
 Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index']);
@@ -73,6 +76,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () 
     Route::get('job/edit/{id}', [AdminJobController::class, 'edit']);
     Route::post('job/update', [AdminJobController::class, 'update']);
     Route::get('job/delete/{id}', [AdminJobController::class, 'delete']);
+    Route::get('job/image/hide/{id}',[AdminJobController::class,'hideImage']);
+    Route::post('job/upload-file',    [AdminJobController::class,'uploadFile']);
 
     /* ----------- Job Request Routes ----------- */
     Route::get('job/request/pending', [AdminJobRequestController::class,'pending']);
@@ -130,6 +135,7 @@ Route::group(['prefix' => 'employee', 'middleware' => ['employee_auth']], functi
      Route::post('job/update-status',           [EmployeeJobController::class,'updateStatus']);
      Route::post('job/update-user',             [EmployeeJobController::class,'updateUser']);
      Route::post('job/upload-file',             [EmployeeJobController::class,'uploadFile']);
+     Route::get('job/image/hide/{id}',          [EmployeeJobController::class,'hideImage']);
 });
 
 Route::group(['prefix' => 'customer', 'middleware' => ['customer_auth']], function () {

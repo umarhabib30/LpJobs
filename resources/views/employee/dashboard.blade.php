@@ -6,7 +6,7 @@
     <!-- ============================================================== -->
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
-            <h5 class="card-header">Jobs</h5>
+            <h5 class="card-header">All Jobs</h5>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered first">
@@ -30,7 +30,7 @@
                                         <td>{{ $job->business->business_name }}</td>
                                         <td>{{ $job->item->name }}</td>
                                         <td>{{ $job->size->size }}</td>
-                                        <td>{{ $job->quantity }}</td>   
+                                        <td>{{ $job->quantity }}</td>
                                         <td>{{ $job->status->status }}</td>
                                         <td>{{ $job->assignedTo->name }}</td>
                                         <td><a href="{{ url('employee/job/request', $job->id) }}"><button

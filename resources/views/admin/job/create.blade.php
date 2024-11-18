@@ -112,7 +112,7 @@
                                 <textarea name="image_notes[]" placeholder="Enter note for the image" required class="form-control"></textarea>
                             </div>
                         </div>
-                        <button class="btn btn-primary mt-3" id="submit_button">Add Job</button>
+                        <button class="btn btn-primary mt-3" id="submit_button">Save</button>
                     </form>
                 </div>
             </div>

@@ -9,7 +9,7 @@ class JobImage extends Model
 {
     use HasFactory;
     protected $fillable =[
-        'user_id','job_id','file','file_type','note',
+        'user_id','job_id','file','file_type','note','hide',
     ];
 
     public function user(){

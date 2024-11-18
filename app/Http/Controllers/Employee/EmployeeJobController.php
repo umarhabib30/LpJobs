@@ -116,4 +116,12 @@ class EmployeeJobController extends Controller
         }
         return redirect()->back()->with('success','File uploaded successfully');
     }
+
+    public function hideImage($id){
+        $image = JobImage::find($id);
+        $image->update([
+            'hide' => true
+        ]);
+        return redirect()->back()->with('success','Image hidden successfully');
+    }
 }

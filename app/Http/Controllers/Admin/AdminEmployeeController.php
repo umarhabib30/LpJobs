@@ -61,7 +61,7 @@ class AdminEmployeeController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        return redirect()->back()->with('success', 'Employee added successfully');
+        return redirect('admin/employee/index')->with('success', 'Employee added successfully');
     }
 
     /**

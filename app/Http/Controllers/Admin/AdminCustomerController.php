@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class AdminCustomerController extends Controller
 {
@@ -39,22 +40,22 @@ class AdminCustomerController extends Controller
     public function store(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'customer_name' => 'required',
-            'address' => 'required',
-            'road' => 'required',
-            'town' => 'required',
-            'city' => 'required',
-            'post_code' => 'required',
-            'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'customer_name' => 'required',
+        //     'address' => 'required',
+        //     'road' => 'required',
+        //     'town' => 'required',
+        //     'city' => 'required',
+        //     'post_code' => 'required',
+        //     'mobile' => 'required',
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+        // ]);
 
-        if ($validator->fails()) {
-            Session::flash('error', $validator->errors()->first());
-            return redirect()->back()->withInput();
-        }
+        // if ($validator->fails()) {
+        //     Session::flash('error', $validator->errors()->first());
+        //     return redirect()->back()->withInput();
+        // }
         try {
             $customer = User::create([
                 'name'=> $request->customer_name,
@@ -72,7 +73,7 @@ class AdminCustomerController extends Controller
                     'post_code' => $request->post_code,
                     'mobile' => $request->mobile,
             ]);
-            return redirect()->back()->with('success', 'customer added successfully');
+            return redirect('admin/customer/index')->with('success', 'customer added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
 
@@ -97,21 +98,21 @@ class AdminCustomerController extends Controller
         $customer = User::find($request->id);
         $customer_detail = CustomerDetail::where('user_id',$customer->id)->first();
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'address' => 'required',
-            'road' => 'required',
-            'town' => 'required',
-            'city' => 'required',
-            'post_code' => 'required',
-            'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255',Rule::unique('users', 'email')->ignore($customer->id)],
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required',
+        //     'address' => 'required',
+        //     'road' => 'required',
+        //     'town' => 'required',
+        //     'city' => 'required',
+        //     'post_code' => 'required',
+        //     'mobile' => 'required',
+        //     'email' => ['required', 'string', 'email', 'max:255',Rule::unique('users', 'email')->ignore($customer->id)],
+        // ]);
 
-        if ($validator->fails()) {
-            Session::flash('error', $validator->errors()->first());
-            return redirect()->back()->withInput();
-        }
+        // if ($validator->fails()) {
+        //     Session::flash('error', $validator->errors()->first());
+        //     return redirect()->back()->withInput();
+        // }
 
         $customer->update([
             'name'=> $request->name,
@@ -140,5 +141,37 @@ class AdminCustomerController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
 
         }
+    }
+
+    public function getProfile($id){
+        $data = [
+            'title' => 'Customer',
+        ];
+        $data['customer'] = User::find($id);
+        return view('admin.customer.complete-profile',$data);
+    }
+
+    public function storeProfile(Request $request){
+         $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->first());
+            return redirect()->back()->withInput();
+        }
+
+        $customer = User::find($request->id);
+        if($customer){
+            $customer->update([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            Auth::login($customer);
+            return redirect('customer/dashboard');
+        }
+
     }
 }

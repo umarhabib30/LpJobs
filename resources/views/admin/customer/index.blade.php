@@ -6,7 +6,11 @@
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
-                <h5 class="card-header">Customers</h5>
+
+                <div class="card-header d-flex justify-content-between">
+                    <h5 >Customers</h5>
+                    <a href="{{ url('admin/customer/create') }}" class="btn btn-primary">Add Customer</a>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered first">
@@ -17,6 +21,7 @@
                                     <th>Address</th>
                                     <th>Mobile</th>
                                     <th>Email</th>
+                                    <th>Get Link</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
@@ -29,10 +34,12 @@
                                         <td>{{ $customer->customerDetail->address }}</td>
                                         <td>{{ $customer->customerDetail->mobile }}</td>
                                         <td>{{ $customer->email }}</td>
-                                        <td><a href="{{ url('admin/customer/edit', $customer->id) }}"><button
-                                                    class="btn btn-primary">Edit</button></a></td>
-                                        <td><a href="" class="delete-customer" customer-id={{ $customer->id }}><button
-                                                    class="btn btn-danger">Delete</button></a></td>
+                                        <td>
+                                            <button class="btn btn-primary copy-link" data-url="{{ url('customer/complete-profile', $customer->id) }}">Get Link</button>
+                                        </td>
+
+                                        <td><a href="{{ url('admin/customer/edit', $customer->id) }}"><button class="btn btn-primary">Edit</button></a></td>
+                                        <td><a href="" class="delete-customer" customer-id={{ $customer->id }}><button class="btn btn-danger">Delete</button></a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -67,6 +74,22 @@
                     }
                 });
             });
+
+            $(document).on('click', '.copy-link', function() {
+            // Get the data-url value
+            let url = $(this).data('url');
+
+            // Create a temporary input element to copy the URL to the clipboard
+            let tempInput = $('<input>');
+            $('body').append(tempInput);
+            tempInput.val(url).select();
+            document.execCommand('copy');
+            tempInput.remove();
+
+            // Optionally, provide feedback to the user
+          toastr.success('Link copied');
         });
+        });
+
     </script>
 @endsection

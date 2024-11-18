@@ -103,55 +103,33 @@
                                     aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Dashboard <span
                                         class="badge badge-success">6</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link @if ($active == 'employee') active @endif" href="#"
-                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-7"
-                                    aria-controls="submenu-7"><i class=" fas fa-users"></i>Employees</a>
-                                <div id="submenu-7" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/employee/create') }}">Add Employee</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/employee/index') }}">View Employees</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link  @if ($active == 'Customer') active @endif" href="#"
-                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-15"
-                                    aria-controls="submenu-15"><i class="fa fa-fw fa-rocket"></i>Customer</a>
-                                <div id="submenu-15" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/customer/create') }}">Add customer
-                                                <span class="badge badge-secondary"></span></a>
-                                            <a class="nav-link" href="{{ url('admin/customer/index') }}">View All<span
-                                                    class="badge badge-secondary"></span></a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link  @if ($active == 'Business') active @endif" href="#"
-                                    data-toggle="collapse" aria-expanded="false" data-target="#submenu-2"
-                                    aria-controls="submenu-2"><i class="fa fa-fw fa-rocket"></i>Business</a>
-                                <div id="submenu-2" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/business/create') }}">Add business
-                                                <span class="badge badge-secondary"></span></a>
-                                            <a class="nav-link" href="{{ url('admin/business/index') }}">View All<span
-                                                    class="badge badge-secondary"></span></a>
-                                        </li>
-
-                                    </ul>
-                                </div>
+                            <li class="nav-item ">
+                                <a class="nav-link @if ($active == 'employee') active @endif "
+                                    href="{{ url('admin/employee/index') }}" aria-controls="submenu-1"><i
+                                        class="fas fa-users"></i>Employees <span
+                                        class="badge badge-success">6</span></a>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item ">
+                                <a class="nav-link @if ($active == 'Customer') active @endif "
+                                    href="{{ url('admin/customer/index') }}" aria-controls="submenu-1"><i
+                                        class="fas fa-users"></i>Customers <span
+                                        class="badge badge-success">6</span></a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link @if ($active == 'Business') active @endif "
+                                    href="{{ url('admin/business/index')}}" aria-controls="submenu-1"><i
+                                        class="fa fa-fw fa-rocket"></i>Business <span
+                                        class="badge badge-success">6</span></a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link @if ($active == 'Jobs') active @endif "
+                                    href="{{ url('admin/jobs/index')}}" aria-controls="submenu-1"><i
+                                        class="fa fa-fw fa-rocket"></i>Jobs <span
+                                        class="badge badge-success">6</span></a>
+                            </li>
+
+                            {{-- <li class="nav-item">
                                 <a class="nav-link @if ($active == 'Jobs') active @endif" href="#"
                                     data-toggle="collapse" aria-expanded="false" data-target="#submenu-3"
                                     aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>Jobs</a>
@@ -165,7 +143,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link @if ($active == 'job request') active @endif" href="#"
                                     data-toggle="collapse" aria-expanded="false" data-target="#submenu-8"
@@ -173,10 +151,12 @@
                                 <div id="submenu-8" class="collapse submenu" style="">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/job/request/pending') }}">Pending</a>
+                                            <a class="nav-link"
+                                                href="{{ url('admin/job/request/pending') }}">Pending</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('admin/job/request/approved') }}">Approved</a>
+                                            <a class="nav-link"
+                                                href="{{ url('admin/job/request/approved') }}">Approved</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -242,7 +222,7 @@
         <div class="dashboard-wrapper">
             <div class="container-fluid dashboard-content">
                 <!-- ============================pageheader=============================== -->
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
                             <h2 class="pageheader-title"> {{$active}}</h2>
@@ -259,7 +239,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- ========================end pageheader================================= -->
 
                 <!-- ===========================Content yield============================= -->

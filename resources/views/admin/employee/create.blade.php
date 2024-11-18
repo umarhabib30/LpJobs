@@ -27,7 +27,7 @@
                                 <input id="confirm" type="text" class="form-control" name="password_confirmation">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Add Employee</button>
+                        <button type="submit" class="btn btn-primary mt-3">Save</button>
                     </form>
                 </div>
             </div>

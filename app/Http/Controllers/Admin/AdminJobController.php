@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\FileHelper;
 
 class AdminJobController extends Controller
 {
@@ -78,7 +79,6 @@ class AdminJobController extends Controller
         $job = Job::where('id',$id)->with('notes')->first();
         $data = [
             'title' => 'Job Details',
-            'breadcrumbs' => array("admin/dashboard" => "Dashboard", 'admin/jobs/index' => 'Jobs', 'admin/job/details/' . $job->id => 'Job Details'),
             'active' => 'Job Details',
             'job' => $job,
         ];
@@ -148,5 +148,39 @@ class AdminJobController extends Controller
         $Job = Job::find($id);
         $Job->delete();
         return redirect()->back()->with('success', 'Job deleted successfully');
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($request->hasFile('images')) {
+
+            foreach ($request->file('images') as $key => $file) {
+                $mimeType = $file->getMimeType();
+                if (str_starts_with($mimeType, 'image/')) {
+                    $fileType = 'img';
+                } else {
+                    $fileType = 'other';
+                }
+                $path = FileHelper::save($file, 'images');
+                JobImage::create([
+                    'user_id' => $user->id,
+                    'job_id' => $request->job_id,
+                    'file' => $path,
+                    'note' => $request->image_notes[$key],
+                    'file_type' => $fileType,
+                ]);
+            }
+        }
+        return redirect()->back()->with('success','File uploaded successfully');
+    }
+
+    public function hideImage($id){
+        $image = JobImage::find($id);
+        $image->update([
+            'hide' => true
+        ]);
+        return redirect()->back()->with('success','Image hidden successfully');
     }
 }

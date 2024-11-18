@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
             $table->string('file');
             $table->string('file_type')->nullable();
+            $table->boolean('hide')->default(false);
             $table->longText('note');
+
             $table->timestamps();
         });
     }

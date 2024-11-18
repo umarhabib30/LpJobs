@@ -167,19 +167,16 @@
                                 <textarea name="image_notes[]" placeholder="Enter note for ths file " required class="form-control"></textarea>
                             </div>
                         </div>
-
-
                     </form>
                 </div>
             </div>
             <div class="row">
                 @foreach ($job->images as $image)
+                    @if (! $image->hide)
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
-                                <button class="btn  btn-sm " data-toggle="tooltip" data-placement="top"
-                                    title="  {{ $image->note }}"> Notes </button>
-                                <strong class="ml-2">Added By : </strong> {{ $image->user->name }}
+                                <button  class="btn  btn-sm "  data-toggle="tooltip" data-placement="top" title="  {{$image->note}}">  {{ $image->user->name }}  </button>
 
                             </div>
                             <div class="card-body text-center">
@@ -192,11 +189,14 @@
                                 @endif
                             </div>
                             <div class="card-footer">
-                                <a href="{{ asset($image->file) }}" class="btn btn-primary w-100"
-                                    target="__blank">View</a>
+                                <a href="{{ asset($image->file) }}" class="btn btn-primary w-25" target="__blank">View</a>
+                                <a href="{{ asset($image->file) }}" class="btn btn-primary" download="download.jpg">Download</a>
+                                <a href="{{ url('employee/job/image/hide',$image->id)}}" class="btn btn-danger w-25" >Hide</a>
                             </div>
                         </div>
                     </div>
+
+                    @endif
                 @endforeach
             </div>
         </div>

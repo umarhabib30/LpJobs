@@ -105,27 +105,53 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <form action="{{ url('admin/job/upload-file') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="job_id" id="" value="{{ $job->id }}">
+                        <h4 class="mt-2">Add Files</h4>
+                        <button type="button" id="add-more" class="btn btn-primary">+Add More</button>
+                        <button style="submit" class="btn btn-primary">Upload</button>
+                        <div id="image-container">
+                            <div class="image-item mt-2">
+                                <div class="row mt-3 ">
+                                    <div class="col-md-12  "><input type="file" name="images[]" required
+                                            class="form-control shadow-sm "></div>
+                                    {{-- <div class="col-md-3  "> <button type="button" class="remove-item btn btn-primary w-100">Remove</button></div> --}}
+                                </div>
+                                <textarea name="image_notes[]" placeholder="Enter note for ths file " required class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="row">
                 @foreach ($job->images as $image)
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <!-- .card -->
-                    <div class="card card-figure">
-                        <!-- .card-figure -->
-                        <figure class="figure">
-                            <!-- .figure-img -->
-                            <div class="figure-img">
-                                <img class="img-fluid" src="{{asset($image->file)}}" alt="Card image cap">
-                                <div class="figure-description">
-                                    <p class="text-muted mb-0">
-                                       {{$image->note}}
-                                    </p>
-                                </div>
+                    @if (! $image->hide)
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <button  class="btn  btn-sm "  data-toggle="tooltip" data-placement="top" title="  {{$image->note}}">  {{ $image->user->name }}  </button>
+
                             </div>
-                        </figure>
+                            <div class="card-body text-center">
+                                @if ($image->file_type == 'img')
+                                    <img class="img-fluid" src="{{ asset($image->file) }}" alt="Card image cap"
+                                        style="height: 200px">
+                                @else
+                                    <img class="img-fluid" src="{{ asset('assets/images/file1.png') }}"
+                                        alt="Card image cap" style="height: 200px">
+                                @endif
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ asset($image->file) }}" class="btn btn-primary w-25" target="__blank">View</a>
+                                <a href="{{ asset($image->file) }}" class="btn btn-primary" download="download.jpg">Download</a>
+                                <a href="{{ url('admin/job/image/hide',$image->id)}}" class="btn btn-danger w-25" >Hide</a>
+                            </div>
+                        </div>
                     </div>
-                    <!-- /.card -->
-                </div>
+
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -292,6 +318,26 @@
             $(document).on('mouseleave', '.read-notes', function(e) {
                 $('#custom-toast').css('opacity', 0).fadeOut(
                     200);
+            });
+
+            document.getElementById('add-more').addEventListener('click', function() {
+                var container = document.getElementById('image-container');
+                var newItem = document.createElement('div');
+                newItem.classList.add('image-item');
+                newItem.innerHTML = `
+                <div class="row mt-3">
+                <div class="col-md-2 pr-0"> <button type="button" class="remove-item btn btn-primary w-100">Remove</button></div>
+                <div class="col-md-10 pl-0"><input type="file" name="images[]" required class="form-control shadow-sm" ></div>
+                </div>
+                <textarea name="image_notes[]" placeholder="Enter note for this file" required class="form-control"></textarea>
+                 `;
+                container.appendChild(newItem);
+            });
+
+            document.getElementById('image-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-item')) {
+                    e.target.closest('.image-item').remove();
+                }
             });
 
         });

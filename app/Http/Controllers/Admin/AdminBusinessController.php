@@ -44,25 +44,25 @@ class AdminBusinessController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'business_name' => 'required',
-            'address' => 'required',
-            'road' => 'required',
-            'town' => 'required',
-            'city' => 'required',
-            'post_code' => 'required',
-            'tel' => 'required',
-            'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:businesses'],
-            'web' => 'required|url',
-            'notes' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'user_id' => 'required',
+        //     'business_name' => 'required',
+        //     'address' => 'required',
+        //     'road' => 'required',
+        //     'town' => 'required',
+        //     'city' => 'required',
+        //     'post_code' => 'required',
+        //     'tel' => 'required',
+        //     'mobile' => 'required',
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:businesses'],
+        //     'web' => 'required|url',
+        //     'notes' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            Session::flash('error', $validator->errors()->first());
-            return redirect()->back()->withInput();
-        }
+        // if ($validator->fails()) {
+        //     Session::flash('error', $validator->errors()->first());
+        //     return redirect()->back()->withInput();
+        // }
         try {
             Business::create($request->all());
             return redirect()->back()->with('success', 'Business added successfully');
@@ -87,26 +87,26 @@ class AdminBusinessController extends Controller
 
     public function update(Request $request)
     {
+   
         $business = Business::find($request->business_id);
+        // $validator = Validator::make($request->all(), [
+        //     'business_name' => 'required',
+        //     'address' => 'required',
+        //     'road' => 'required',
+        //     'town' => 'required',
+        //     'city' => 'required',
+        //     'post_code' => 'required',
+        //     'tel' => 'required',
+        //     'mobile' => 'required',
+        //     'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers', 'email')->ignore($business->id)],
+        //     'web' => 'required|url',
+        //     'notes' => 'required',
+        // ]);
 
-        $validator = Validator::make($request->all(), [
-            'business_name' => 'required',
-            'address' => 'required',
-            'road' => 'required',
-            'town' => 'required',
-            'city' => 'required',
-            'post_code' => 'required',
-            'tel' => 'required',
-            'mobile' => 'required',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers', 'email')->ignore($business->id)],
-            'web' => 'required|url',
-            'notes' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            Session::flash('error', $validator->errors()->first());
-            return redirect()->back()->withInput();
-        }
+        // if ($validator->fails()) {
+        //     Session::flash('error', $validator->errors()->first());
+        //     return redirect()->back()->withInput();
+        // }
 
         $business->update($request->all());
         return redirect('admin/business/index')->with('success', 'Business updated successfully');
