@@ -56,7 +56,7 @@ class AdminJobController extends Controller
         try {
         $job = Job::create($request->all());
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $key => $image) {
+            foreach ($request->file('images') as $key => $file) {
                 $mimeType = $file->getMimeType();
                 if (str_starts_with($mimeType, 'image/')) {
                     $fileType = 'img';
